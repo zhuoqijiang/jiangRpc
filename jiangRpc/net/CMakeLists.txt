@@ -9,4 +9,4 @@ set(NET_SRCS
 
 
 add_library(jiangRpc_net ${NET_SRCS})
-target_link_libraries(jiangRpc_net pthread boost_context)
+target_link_libraries(jiangRpc_net pthread boost_context jiangRpc_log)

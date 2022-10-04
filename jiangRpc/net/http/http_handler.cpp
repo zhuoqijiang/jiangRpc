@@ -1,9 +1,9 @@
 #include <memory>
 #include <utility>
+#include "jiangRpc/log/logger.h"
 #include "http_handler.h"
 #include "http_server.h"
 #include "jiangRpc/net/socket.h"
-
 
 using namespace jiangRpc;
 HttpHandler::HttpHandler(HttpServer* server, Conn* conn)
@@ -26,7 +26,7 @@ void HttpHandler::handle()
 		}
 		
 		buffer_.resize(n);
-
+		LOG_INFO("\n%s", buffer_.c_str());
 		state = parse(&httpContext);
 		
 		if (nowReadPos_ == static_cast<int>(buffer_.size())) {

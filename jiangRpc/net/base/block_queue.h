@@ -7,6 +7,7 @@
 #include "boost/noncopyable.hpp"
 
 namespace jiangRpc {
+
 template <typename T>
 class BlockQueue: public boost::noncopyable {
 public:

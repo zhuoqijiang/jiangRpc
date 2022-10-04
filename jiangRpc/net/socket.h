@@ -1,10 +1,10 @@
 
 #include <functional>
 #include <memory>
+#include "jiangRpc/log/logger.h"
 #include "netfd.h"
 #include "scheduler.h"
 #include "signal.h"
-
 namespace jiangRpc {
 class Conn {
 public:
@@ -54,6 +54,7 @@ public:
 	void start()
 	{
 		if (!fd_.socketBindListen()) {
+			 LOG_ERROR("BINDING ERROR!!!");
 			 abort();
 		}
 		signal(SIGPIPE, SIG_IGN);

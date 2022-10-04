@@ -3,6 +3,8 @@
 #include <functional>
 #include <thread>
 #include <boost/noncopyable.hpp>
+
+#include "jiangRpc/log/logger.h"
 #include "timer.h"
 #include "netpoll.h"
 #include "base/block_queue.h"
@@ -57,6 +59,7 @@ public:
 				p = &processor;
 			}
 		}
+		LOG_DEBUG("steal task");
 		return (*p)->popTask(status);
 	}
 

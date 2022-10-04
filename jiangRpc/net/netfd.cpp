@@ -6,6 +6,8 @@
 #include <signal.h>
 
 #include <string>
+
+#include "jiangRpc/log/logger.h"
 #include "netfd.h"
 #include "scheduler.h"
 
@@ -38,9 +40,11 @@ bool NetConnFd::netOpen(int fd, const Address& laddr, const Address& raddr)
 	laddr_ = laddr;
 	raddr_ = raddr;
 	if (setNonblock(fd_) < 0) {
+		LOG_ERROR("Conn setNonblock error");
 		return false;
 	}
 	if (!netpollOpen()) {
+		LOG_ERROR("Conn poll regist error");
 		return false;
 	}
 	return true;
@@ -108,6 +112,7 @@ int NetConnFd::nonblockRead(std::string& str)
                 continue;
             }
 			if (errno == SIGPIPE){
+				LOG_DEBUG("pipe break");
 				return -1;
 			}
             return -1;
@@ -140,6 +145,7 @@ int NetConnFd::nonblockWrite(std::string& str)
                  continue;
              }
 			 if (errno == SIGPIPE) {
+				 LOG_DEBUG("pipe break");
 				 return -1;
 			 }
              return -1;
@@ -161,6 +167,7 @@ bool NetAcceptorFd::netAccept(NetConnFd& netConnFd)
 	raddr.addr = inet_ntoa(addr.sin_addr);
 	raddr.port = ntohs(addr.sin_port);
 	
+	LOG_INFO("Conntion: %s:%d", raddr.addr.c_str(), raddr.port);
 	if (!netConnFd.netOpen(fd, addr_ , raddr)) {
 		close(fd);
 		return false;

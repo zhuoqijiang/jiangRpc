@@ -17,9 +17,12 @@ find_package(Boost REQUIRED)
 find_package(Protobuf REQUIRED)
 
 
+include_directories(${PROJECT_SOURCE_DIR})
+
 
 add_subdirectory(jiangRpc/net/http)
 add_subdirectory(jiangRpc/net/)
+add_subdirectory(jiangRpc/log)
 add_subdirectory(examples)
 
 
