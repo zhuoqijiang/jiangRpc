@@ -1,7 +1,7 @@
 #pragma once
 #include "jiangRpc/net/http/http_server.h"
 #include "jiangRpc/net/http/http_enum.h"
-#include "traits.h"
+#include "jiangRpc/rpc/traits.h"
 
 namespace jiangRpc {
 

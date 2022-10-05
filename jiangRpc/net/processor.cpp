@@ -1,9 +1,9 @@
 
 #include <pthread.h>
 #include <memory>
-#include "task.h"
-#include "processor.h"
-#include "scheduler.h"
+#include "jiangRpc/net/task.h"
+#include "jiangRpc/net/processor.h"
+#include "jiangRpc/net/scheduler.h"
 
 
 using namespace jiangRpc;

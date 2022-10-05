@@ -1,9 +1,8 @@
 #pragma once
 
+#include <sys/epoll.h>
 #include <vector>
 #include <memory>
-#include <sys/epoll.h>
-#include <boost/core/noncopyable.hpp>
 #include <boost/noncopyable.hpp>
 
 

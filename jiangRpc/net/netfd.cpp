@@ -8,8 +8,8 @@
 #include <string>
 
 #include "jiangRpc/log/logger.h"
-#include "netfd.h"
-#include "scheduler.h"
+#include "jiangRpc/net/netfd.h"
+#include "jiangRpc/net/scheduler.h"
 
 
 using namespace jiangRpc;

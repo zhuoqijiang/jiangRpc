@@ -1,8 +1,8 @@
 
 #include <sstream>
-#include "netpoll.h"
-#include "polldesc.h"
-#include "scheduler.h"
+#include "jiangRpc/net/netpoll.h"
+#include "jiangRpc/net/polldesc.h"
+#include "jiangRpc/net/scheduler.h"
 
 using namespace jiangRpc;
 Netpoll::Netpoll()

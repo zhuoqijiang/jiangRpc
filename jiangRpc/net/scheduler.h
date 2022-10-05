@@ -5,10 +5,10 @@
 #include <boost/noncopyable.hpp>
 
 #include "jiangRpc/log/logger.h"
-#include "timer.h"
-#include "netpoll.h"
-#include "base/block_queue.h"
-#include "processor.h"
+#include "jiangRpc/net/timer.h"
+#include "jiangRpc/net/netpoll.h"
+#include "jiangRpc/net/base/block_queue.h"
+#include "jiangRpc/net/processor.h"
 
 namespace jiangRpc {
 class Task;
