@@ -4,7 +4,6 @@
 
 #include "jiangRpc/net/scheduler.h"
 #include "jiangRpc/net/task.h"
-
 using namespace jiangRpc;
 void Scheduler::start(int threadNum)
 {
@@ -35,6 +34,7 @@ void Scheduler::join()
 
 void Scheduler::createTask(const Functor& cb, int stackSize)
 {
+
 	Functor callback = [cb](){
 		cb();
 		t_processor->curTask()->setState(Task::State::DEAD);	
@@ -43,11 +43,12 @@ void Scheduler::createTask(const Functor& cb, int stackSize)
 	Processor* p = processors_[cycleNextProcessor()].get();
 	task->setProcessor(p);
 	p->addTask(task);
+
 }
 
 void Scheduler::listen()
 {
-	const int pollTimeout = 1000;
+	const int pollTimeout = 10;
 	while (m_listening) {
 		handlePoll(pollTimeout);
 	    handleDeadline();
@@ -106,6 +107,21 @@ std::vector<PollDesc*> Scheduler::timer_wait()
 	return timers_.getExpiredPolldescs();
 }
 
+Scheduler::SP_Task Scheduler::stealWork(bool* status) 
+{
+		int max = -1;
+		UP_Processor* p = nullptr;
+		for (auto& processor: processors_) {
+			if (processor->activeTaskSize() > max) {
+				p = &processor;
+			}
+		}
+		SP_Task task = (*p)->popTask(status);
+		if (*status) {
+		LOG_WARN("steal task from cpu:%d to cpu:%d", t_processor->getCpuId(), (*p)->getCpuId());
+		}
+		return task;
+}
 
 
 int Scheduler::cycleNextProcessor()

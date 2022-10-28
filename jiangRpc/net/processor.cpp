@@ -24,17 +24,11 @@ void Processor::stop()
 	running_ = false;
 }
 
-#include <iostream>
 void Processor::Process(Processor* processor)
 {
 	t_processor = processor;
+	//t_processor->bindCpu();
 	/*
-	cpu_set_t cpuset;
-    CPU_ZERO(&cpuset);
-    CPU_SET(t_processor->cpu_,&cpuset);
-	
-	pthread_setaffinity_np(t_processor->thread_.native_handle(), sizeof(cpu_set_t), &cpuset);
-	*/
 	while (t_processor->running_) {
 		bool status;
 		t_processor->curTask_ = t_processor->activeTasks_.pop(&status);
@@ -49,6 +43,28 @@ void Processor::Process(Processor* processor)
 			continue;
 		}
 		t_processor->resume();
+	}
+	*/
+	while (t_processor->running_) {
+		auto tasks = t_processor->activeTasks_.popAll();
+		if (tasks.empty()) {
+			bool status = false;
+			SP_Task task = g_scheduler.stealWork(&status);
+			if (!status) {
+				continue;
+			}
+			tasks.push(task);
+		}
+
+		while(!tasks.empty()) {
+			t_processor->curTask_ = tasks.front();
+			tasks.pop();
+			t_processor->curTask_->setProcessor(processor);
+			if (t_processor->curTask_->getState() == Task::State::DEAD) {
+				continue;
+			}
+			t_processor->resume();
+		}
 	}
 	t_processor->running_ = false;
 }
@@ -85,4 +101,12 @@ void Processor::resume()
 		
 	curTask_->setState(Task::State::RUN);
 	curTask_->swapIn();
+}
+
+void Processor::bindCpu()
+{
+	cpu_set_t cpuset;
+    CPU_ZERO(&cpuset);
+    CPU_SET(t_processor->cpu_,&cpuset);
+	pthread_setaffinity_np(t_processor->thread_.native_handle(), sizeof(cpu_set_t), &cpuset);
 }

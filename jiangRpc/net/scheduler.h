@@ -50,18 +50,7 @@ public:
 	void handleDeadline();
 	std::vector<PollDesc*> timer_wait();
 	
-	SP_Task stealWork(bool* status) 
-	{
-		int max = -1;
-		UP_Processor* p = nullptr;
-		for (auto& processor: processors_) {
-			if (processor->activeTaskSize() > max) {
-				p = &processor;
-			}
-		}
-		LOG_DEBUG("steal task");
-		return (*p)->popTask(status);
-	}
+	SP_Task stealWork(bool* status);
 
 	void handleFunctor();
 private:

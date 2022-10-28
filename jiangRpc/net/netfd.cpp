@@ -163,6 +163,10 @@ bool NetAcceptorFd::netAccept(NetConnFd& netConnFd)
 	sockaddr_in addr;
 	socklen_t len = sizeof(sockaddr_in);
 	int fd = accept(fd_, (sockaddr*)&addr, &len);
+	if (fd < 0) {
+		LOG_ERROR("too many open files");
+		return false;
+	}
 	Address raddr;
 	raddr.addr = inet_ntoa(addr.sin_addr);
 	raddr.port = ntohs(addr.sin_port);

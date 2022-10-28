@@ -17,9 +17,10 @@ public:
 	T pop(bool* status);
 	void push(const T&, bool* status);
 	void emplace(T&&);
+	std::queue<T> popAll();
 	T front();
 private:
-	uint32_t waitTimeMs_ = 100;
+	uint32_t waitTimeMs_ = 1000;
 	uint32_t maxSize_ = 128 * 128;
 	std::mutex mutex_;
 	std::condition_variable emptyCondVar_;
@@ -87,6 +88,19 @@ T BlockQueue<T>::front()
 	}
 	T val = queue_.front();
 	return val;
+}
+template<typename T>
+std::queue<T> BlockQueue<T>::popAll()
+{
+	std::queue<T> vals;
+	std::unique_lock<std::mutex> locker(mutex_);
+	while (queue_.size() <= 0) {
+		if (std::cv_status::timeout == emptyCondVar_.wait_for(locker, std::chrono::milliseconds(waitTimeMs_))) {
+			return vals;
+		}
+	}
+	vals.swap(queue_);
+	return vals;
 }
 
 }

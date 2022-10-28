@@ -20,7 +20,10 @@ public:
 	void start();
 	void join();
 	void stop();
-
+	int getCpuId()
+	{
+		return cpu_;
+	}
 	bool addTask(SP_Task& task)
 	{
 		bool status;
@@ -61,6 +64,7 @@ public:
 	void resume();
 
 private:
+	void bindCpu();
 	void fillExpiredTasks();
 private:
 	bool running_ = false;
@@ -72,7 +76,7 @@ private:
 	std::vector<Functor> funcs_;
 	std::thread::id id_;
 	std::thread thread_;	
-
+	
 	int cpu_;
 };
 }
